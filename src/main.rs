@@ -1,12 +1,19 @@
-use warp::Filter;
+use actix_web::{web, App, HttpRequest, HttpServer, Responder};
 
-#[tokio::main]
-async fn main() {
-    // GET /hello/warp => 200 OK with body "Hello, warp!"
-    let hello = warp::path!("hello" / String)
-        .map(|name| format!("Hello, {}!", name));
+async fn greet(req: HttpRequest) -> impl Responder {
+    let name = req.match_info().get("name").unwrap_or("World");
+    format!("Hello {}!", &name)
+}
 
-    warp::serve(hello)
-        .run(([0, 0, 0, 0], 8080))
-        .await;
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    HttpServer::new(|| {
+        App::new()
+            .route("/", web::get().to(greet))
+            .route("/{name}", web::get().to(greet))
+    })
+        .bind(("0.0.0.0", 8080))?
+        .shutdown_timeout(10)
+        .run()
+        .await
 }
