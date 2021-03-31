@@ -16,6 +16,6 @@ RUN rm ./target/x86_64-unknown-linux-musl/release/deps/untitled*
 RUN cargo build --target x86_64-unknown-linux-musl --release
 
 FROM scratch
-COPY --from=builder usr/src/app_server/target/x86_64-unknown-linux-musl/release .
+COPY --from=builder usr/src/app_server/target/x86_64-unknown-linux-musl/release/untitled .
 USER 1000
 CMD ["./untitled"]
