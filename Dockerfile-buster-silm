@@ -1,0 +1,16 @@
+FROM rust:slim-buster as builder2
+WORKDIR /usr/src
+RUN USER=root cargo new app_server
+WORKDIR /usr/src/app_server
+COPY Cargo.toml Cargo.lock ./
+RUN cargo build -j2 --release
+RUN rm src/*.rs
+
+COPY src ./src
+RUN rm ./target/release/deps/untitled*
+RUN cargo build -j2 --release
+
+FROM debian:buster-slim
+COPY --from=builder2 usr/src/app_server/target/release/untitled .
+USER 1000
+CMD ["./untitled"]
