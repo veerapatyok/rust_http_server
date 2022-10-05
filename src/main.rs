@@ -6,7 +6,7 @@ async fn greet(req: HttpRequest) -> impl Responder {
 }
 
 #[actix_web::main]
-async fn main() -> std::io::Result<()> {
+async fn main() -> anyhow::Result<()> {
     HttpServer::new(|| {
         App::new()
             .route("/", web::get().to(greet))
@@ -16,4 +16,5 @@ async fn main() -> std::io::Result<()> {
     .shutdown_timeout(10)
     .run()
     .await
+    .map_err(|e| anyhow::anyhow!(e))
 }
