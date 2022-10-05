@@ -12,8 +12,8 @@ async fn main() -> std::io::Result<()> {
             .route("/", web::get().to(greet))
             .route("/{name}", web::get().to(greet))
     })
-        .bind(("0.0.0.0", 8080))?
-        .shutdown_timeout(10)
-        .run()
-        .await
+    .bind(("0.0.0.0", 8080))?
+    .shutdown_timeout(10)
+    .run()
+    .await
 }
